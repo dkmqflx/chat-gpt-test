@@ -1,14 +1,15 @@
-const apiKey = "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";
-const OpenAI = require("openai");
+const apiKey = "sk-";
+const { Configuration, OpenAIApi } = require("openai");
 const express = require("express");
 var cors = require("cors");
 const app = express();
 
-const openai = new OpenAI({
-  apiKey: apiKey, // defaults to process.env["OPENAI_API_KEY"], https://platform.openai.com/api-keys
+const configuration = new Configuration({
+  apiKey: apiKey,
 });
+const openai = new OpenAIApi(configuration);
 
-//CORS 이슈 해결, 현재는 옵션 불필요
+//CORS 이슈 해결
 // let corsOptions = {
 //     origin: 'https://www.domain.com',
 //     credentials: true
@@ -20,9 +21,8 @@ app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 // POST method route
-app.get("/fortuneTell", async function (req, res) {
-  // https://platform.openai.com/docs/api-reference/chat/create?lang=node.js
-  const completion = await openai.chat.completions.create({
+app.post("/fortuneTell", async function (req, res) {
+  const completion = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
     messages: [
       {
@@ -43,9 +43,9 @@ app.get("/fortuneTell", async function (req, res) {
       { role: "user", content: "오늘의 운세가 뭐야?" },
     ],
   });
-  let fortune = completion.choices[0].message["content"];
+  let fortune = completion.data.choices[0].message["content"];
   console.log(fortune);
-  res.send(fortune);
+  res.json({ assistant: fortune });
 });
 
 app.listen(3000);
