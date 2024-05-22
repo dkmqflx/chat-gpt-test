@@ -8,7 +8,7 @@ const openai = new OpenAI({
   apiKey: apiKey, // defaults to process.env["OPENAI_API_KEY"], https://platform.openai.com/api-keys
 });
 
-//CORS 이슈 해결
+//CORS 이슈 해결, 현재는 옵션 불필요
 // let corsOptions = {
 //     origin: 'https://www.domain.com',
 //     credentials: true
@@ -21,6 +21,7 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 
 // POST method route
 app.get("/fortuneTell", async function (req, res) {
+  // https://platform.openai.com/docs/api-reference/chat/create?lang=node.js
   const completion = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
     messages: [
