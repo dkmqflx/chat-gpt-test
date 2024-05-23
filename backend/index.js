@@ -22,7 +22,12 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 
 // POST method route
 app.post("/fortuneTell", async function (req, res) {
-  let { userMessages, assistantMessages } = req.body;
+  let { myDateTime, userMessages, assistantMessages } = req.body;
+  // 생년월일 데이터가 추가된다
+
+  let todayDateTime = new Date().toLocaleString("ko-KR", {
+    timeZone: "Asia/Seoul",
+  });
 
   let messages = [
     {
@@ -40,10 +45,16 @@ app.post("/fortuneTell", async function (req, res) {
       content:
         "안녕하세요! 저는 챗도지입니다. 운세와 점성술에 관한 질문이 있으신가요? 어떤 것이든 물어보세요, 최선을 다해 답변해 드리겠습니다.",
     },
+    {
+      role: "user",
+      content: `저의 생년월일과 태어난 시간은 ${myDateTime}입니다. 오늘은 ${todayDateTime}입니다.`,
+    },
+    {
+      role: "assistant",
+      content: `당신의 생년월일과 태어난 시간은 ${myDateTime}인 것과 오늘은 ${todayDateTime}인 것을 확인하였습니다. 운세에 대해서 어떤 것이든 물어보세요!`,
+    },
   ];
 
-  // 문자열을 깔끔하게 처리하는 과정이 필요하다
-  // 맨 앞에서 부터 꺼내기 위해 shift 사용한다
   while (userMessages.length != 0 || assistantMessages.length != 0) {
     if (userMessages.length != 0) {
       messages.push(
@@ -65,7 +76,6 @@ app.post("/fortuneTell", async function (req, res) {
     }
   }
 
-  // 지금까지 주고 받은 대화를 반영해서 응답을 보내준다
   const completion = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
     messages: messages,
