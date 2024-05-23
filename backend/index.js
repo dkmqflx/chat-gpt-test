@@ -76,6 +76,7 @@ app.post("/fortuneTell", async function (req, res) {
     }
   }
 
+  // 실패했을 때 재시도할 수 있도록 처리해준다
   const maxRetries = 3;
   let retries = 0;
   let completion;
