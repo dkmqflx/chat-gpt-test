@@ -1,5 +1,5 @@
-const apiKey = "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";
-const serverless = require("serverless-http"); // express를 서버리스 환경에서 쓸 수 있도록
+const apiKey = "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";
+const serverless = require("serverless-http");
 const { Configuration, OpenAIApi } = require("openai");
 const express = require("express");
 var cors = require("cors");
@@ -11,7 +11,6 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 //CORS 이슈 해결
-// 내 사이트 아니면 요청이 되지 않도록
 let corsOptions = {
   origin: "https://chatdoge123jocoding.pages.dev",
   credentials: true,
@@ -77,16 +76,30 @@ app.post("/fortuneTell", async function (req, res) {
     }
   }
 
-  const completion = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages: messages,
-  });
+  const maxRetries = 3;
+  let retries = 0;
+  let completion;
+  while (retries < maxRetries) {
+    try {
+      completion = await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: messages,
+      });
+      break;
+    } catch (error) {
+      retries++;
+      console.log(error);
+      console.log(
+        `Error fetching data, retrying (${retries}/${maxRetries})...`
+      );
+    }
+  }
+
   let fortune = completion.data.choices[0].message["content"];
 
   res.json({ assistant: fortune });
 });
 
-// express로 만든앱을 서버리스하게 사용할 수 있도록 한다
 module.exports.handler = serverless(app);
 
 // app.listen(3000)

@@ -2,7 +2,11 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Chat UI Screen</title>
+    <title>운세보는 챗도지</title>
+    <!-- 아래 viewport 관련 설정 있어야지 승인이 난다  -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width-device-width, initial-scale=1.0" />
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
@@ -91,6 +95,15 @@
         font-size: 25px;
         text-align: center;
       }
+
+      .kakao-ad {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+        min-width: 350px;
+        min-height: 200px;
+      }
     </style>
   </head>
 
@@ -144,6 +157,23 @@
         <button id="btn" onclick="spinner()">Send</button>
       </div>
     </div>
+
+    <!-- 카카오 애드 배너  -->
+    <div class="kakao-ad">
+      <ins
+        class="kakao_ad_area"
+        style="display: none"
+        data-ad-unit="DAN-KbdwsZ8O86UWMOWU"
+        data-ad-width="320"
+        data-ad-height="100"
+      ></ins>
+      <script
+        type="text/javascript"
+        src="//t1.daumcdn.net/kas/static/ba.min.js"
+        async
+      ></script>
+    </div>
+
     <script>
       const chatBox = document.querySelector(".chat-box");
       let userMessages = [];
@@ -181,13 +211,11 @@
 
         chatInput.value = "";
 
-        // aws로 배포한 aws 주소를 넣어준다
         const response = await fetch(
-          "https://c1iqo8zon0.execute-api.ap-northeast-2.amazonaws.com/fortuneTell",
+          "https://c1iqo8zon0.execute-api.ap-northeast-2.amazonaws.com/prod/fortuneTell",
           {
             method: "POST",
             headers: {
-              "Access-Control-Allow-Origin": "*",
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -206,9 +234,17 @@
 
         const astrologerMessage = document.createElement("div");
         astrologerMessage.classList.add("chat-message");
-        astrologerMessage.innerHTML = `
-    <p class='assistant'>${data.assistant}</p>
-  `;
+        astrologerMessage.innerHTML = `<p class='assistant'>${data.assistant}</p>`;
+        const p = document.createElement("p");
+        p.innerHTML =
+          "추가로 링크를 눌러 작은 정성 배풀어주시면 더욱 좋은 운이 있으실겁니다. => ";
+        p.classList.add("assistant");
+        const link = document.createElement("a");
+        link.href = "https://toss.me/jocoding";
+        link.innerHTML = "복채 보내기";
+        p.appendChild(link);
+        astrologerMessage.appendChild(p);
+        ("<p> <a href='https://toss.me/jocoding'>복채 보내기</a></p>");
         chatBox.appendChild(astrologerMessage);
       };
 
