@@ -23,7 +23,6 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 // POST method route
 app.post("/fortuneTell", async function (req, res) {
   let { myDateTime, userMessages, assistantMessages } = req.body;
-  // 생년월일 데이터가 추가된다
 
   let todayDateTime = new Date().toLocaleString("ko-KR", {
     timeZone: "Asia/Seoul",
