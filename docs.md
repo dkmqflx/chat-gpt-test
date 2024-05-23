@@ -19,3 +19,15 @@
 - 함수 생성을 통해서 만든다
 
 - backend 폴더 업로드 한다
+
+---
+
+## 22. 비즈니스화 방안 및 서비스 홍보 안내
+
+- 구글, 네이버에 등록한다
+
+---
+
+### 24. (+ 보너스) 스마트폰 앱 만들기 (with React Native Expo)
+
+- [앱 개발 이렇게 쉬웠나? React Native로 크로스 플랫폼 웹뷰앱 만들기](https://www.youtube.com/watch?v=yjPl8Injlbw)
